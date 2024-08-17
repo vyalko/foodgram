@@ -15,6 +15,11 @@ DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://bestfoodgram.duckdns.org',
+    'http://bestfoodgram.duckdns.org',
+]
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -154,4 +159,4 @@ DJOSER = {
         'user_list': ['rest_framework.permissions.AllowAny'],
     },
 }
-DOMAIN_NAME = "http://bestfoodgram.duckdns.org"
+DOMAIN_NAME = "https://bestfoodgram.duckdns.org"
