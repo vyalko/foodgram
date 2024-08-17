@@ -1,20 +1,5 @@
 from io import BytesIO
 
-from django.contrib.auth import get_user_model
-from django.http import FileResponse, Http404
-from django.shortcuts import get_object_or_404, redirect
-from django.urls import reverse
-from django_filters.rest_framework import DjangoFilterBackend
-from djoser.views import UserViewSet
-from reportlab.lib.pagesizes import A4
-from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.pdfgen import canvas
-from rest_framework import status, viewsets
-from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.response import Response
-
 from api.filters import IngredientFilter, RecipeFilter
 from api.pagination import CustomPagination
 from api.permissions import IsAuthorOrReadOnly
@@ -23,8 +8,22 @@ from api.serializers import (AvatarSerializer, CustomUserSerializer,
                              RecipeSerializer, RecipeWriteSerializer,
                              ShortLinkSerializer, SubscriptionSerializer,
                              TagSerializer)
+from django.contrib.auth import get_user_model
+from django.http import FileResponse, Http404
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse
+from django_filters.rest_framework import DjangoFilterBackend
+from djoser.views import UserViewSet
 from recipes.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
                             ShoppingCart, ShortLink, Tag)
+from reportlab.lib.pagesizes import A4
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfgen import canvas
+from rest_framework import status, viewsets
+from rest_framework.decorators import action
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
 from users.models import CustomUser, Subscription
 
 User = get_user_model()

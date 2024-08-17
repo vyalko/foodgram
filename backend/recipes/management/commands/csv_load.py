@@ -1,7 +1,6 @@
 import csv
 
 from django.core.management import BaseCommand
-
 from recipes.models import Ingredient, Tag
 
 PATH_SRC = 'static/data/'
