@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django_filters.rest_framework import FilterSet, filters
+
 from recipes.models import Ingredient, Recipe, Tag
 
 User = get_user_model()
@@ -21,7 +22,6 @@ class RecipeFilter(FilterSet):
         field_name='tags__slug',
         queryset=Tag.objects.all(),
         to_field_name='slug',
-        conjoined=True,
         label='Теги'
     )
     is_favorited = filters.BooleanFilter(

@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
 from django.db import models
+
 from recipes import config
 from users.utils import max_length_role
 from users.validators import validation_username

@@ -1,5 +1,20 @@
 from io import BytesIO
 
+from django.contrib.auth import get_user_model
+from django.http import FileResponse, Http404
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse
+from django_filters.rest_framework import DjangoFilterBackend
+from djoser.views import UserViewSet
+from reportlab.lib.pagesizes import A4
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfgen import canvas
+from rest_framework import status, viewsets
+from rest_framework.decorators import action
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+
 from api.filters import IngredientFilter, RecipeFilter
 from api.pagination import CustomPagination
 from api.permissions import IsAuthorOrReadOnly
@@ -8,21 +23,8 @@ from api.serializers import (AvatarSerializer, CustomUserSerializer,
                              RecipeSerializer, RecipeWriteSerializer,
                              ShortLinkSerializer, SubscriptionSerializer,
                              TagSerializer)
-from django.contrib.auth import get_user_model
-from django.http import FileResponse, Http404
-from django.shortcuts import get_object_or_404, redirect
-from django.urls import reverse
-from django_filters.rest_framework import DjangoFilterBackend
-from djoser.views import UserViewSet
 from recipes.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
                             ShoppingCart, ShortLink, Tag)
-from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.pdfgen import canvas
-from rest_framework import status, viewsets
-from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.response import Response
 from users.models import CustomUser, Subscription
 
 User = get_user_model()
@@ -249,12 +251,10 @@ class RecipeViewSet(viewsets.ModelViewSet):
         original_url = request.build_absolute_uri(
             reverse('api:recipe-detail', kwargs={'pk': recipe.pk}))
 
-        short_link = ShortLink.objects.get_or_create(
+        short_link, created = ShortLink.objects.get_or_create(
             original_url=original_url)
 
         serializer = ShortLinkSerializer(short_link)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -273,10 +273,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
                             status=status.HTTP_400_BAD_REQUEST)
 
         buffer = BytesIO()
-        p = canvas.Canvas(buffer)
+        p = canvas.Canvas(buffer, pagesize=A4)
 
-        pdfmetrics.registerFont(TTFont('Arial', 'Arial.ttf'))
-        p.setFont('Arial', 12)
+        pdfmetrics.registerFont(
+            TTFont('ArialMT', '/usr/share/fonts/truetype/arialmt.ttf')
+        )
+        p.setFont('ArialMT', 12)
 
         p.drawString(100, 750, "Список покупок:")
 
