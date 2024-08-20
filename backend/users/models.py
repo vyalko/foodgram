@@ -1,8 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
 from django.db import models
+
 from recipes import config
-from users.utils import max_length_role
 from users.validators import validation_username
 
 
@@ -10,13 +10,6 @@ class CustomUser(AbstractUser):
     email = models.EmailField(
         max_length=config.MAX_LENGTH_NAME,
         unique=True
-    )
-    role = models.CharField(
-        max_length=max_length_role(
-            config.ROLES
-        ),
-        choices=config.ROLES,
-        default=config.USER
     )
     username = models.CharField(
         'Пользователь',
@@ -60,13 +53,6 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.username
 
-    @property
-    def is_admin(self):
-        return (
-            self.role == config.ADMIN
-            or self.is_staff
-        )
-
 
 class Subscription(models.Model):
     user = models.ForeignKey(
@@ -84,9 +70,14 @@ class Subscription(models.Model):
 
     class Meta:
         ordering = ['-id']
-        unique_together = ('user', 'author')
         verbose_name = 'Подписка на авторов'
         verbose_name_plural = 'Подписки на авторов'
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'author'],
+                name='unique_subscription'
+            )
+        ]
 
     def __str__(self):
         return f'{self.user.username} - {self.author.username}'

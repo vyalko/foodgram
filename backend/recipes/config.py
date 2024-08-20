@@ -9,9 +9,3 @@ MAX_LENGTH_UNIT = 50
 MAX_LENGTH_TITLE = 255
 MAX_LENGTH_URL = 200
 MAX_LENGTH_LINK = 6
-USER = 'user'
-ADMIN = 'admin'
-ROLES = (
-        ('user', 'Пользователь'),
-        ('admin', 'Администратор'),
-)

@@ -159,4 +159,4 @@ DJOSER = {
         'user_list': ['rest_framework.permissions.AllowAny'],
     },
 }
-DOMAIN_NAME = "https://bestfoodgram.duckdns.org"
+DOMAIN_NAME = os.getenv('DOMAIN_NAME')
