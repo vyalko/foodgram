@@ -7,12 +7,12 @@ from rest_framework.authtoken import views
 from api.utils import redirect_short_link
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/', include('api.urls')),
-    path('api/', include('djoser.urls')),
-    path('api/auth/', include('djoser.urls')),
-    path('api/auth/', include('djoser.urls.authtoken')),
-    path('api-token-auth/', views.obtain_auth_token),
+    path('admin/', admin.site.urls, name='admin'),
+    path('api/', include('api.urls'), name='api'),
+    path('api/', include('djoser.urls'), name='djoser'),
+    path('api/auth/', include('djoser.urls'), name='auth'),
+    path('api/auth/', include('djoser.urls.authtoken'), name='auth-token'),
+    path('api-token-auth/', views.obtain_auth_token, name='token-auth'),
     path('<str:short_url>/', redirect_short_link, name='redirect_short_link'),
 ]
 
