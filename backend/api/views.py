@@ -160,14 +160,10 @@ class RecipeViewSet(viewsets.ModelViewSet):
         permission_classes=[IsAuthenticated],
         url_path='favorite'
     )
-    def favorite(self, request, pk=None):
-        recipe = self.get_object()
-        user = request.user
-
+    def favorite(self, request, pk):
         if request.method == 'POST':
-            return self.add_to(user, recipe, Favorite)
-
-        return self.delete_from(user, recipe, Favorite)
+            return self.add_to(request.user, pk, Favorite)
+        return self.delete_from(request.user, pk, Favorite)
 
     @action(
         detail=True,
@@ -175,32 +171,30 @@ class RecipeViewSet(viewsets.ModelViewSet):
         permission_classes=[IsAuthenticated],
         url_path='shopping_cart'
     )
-    def shopping_cart(self, request, pk=None):
-        recipe = self.get_object()
-        user = request.user
-
+    def shopping_cart(self, request, pk):
         if request.method == 'POST':
-            return self.add_to(user, recipe, ShoppingCart)
+            return self.add_to(request.user, pk, ShoppingCart)
+        return self.delete_from(request.user, pk, ShoppingCart)
 
-        return self.delete_from(user, recipe, ShoppingCart)
-
-    def add_to(self, user, recipe, model):
+    def add_to(self, user, pk, model):
         """Добавление рецепта в коллекцию."""
+        recipe = get_object_or_404(Recipe, pk=pk)
         if model.objects.filter(user=user, recipe=recipe).exists():
-            return Response({'errors': 'Рецепт уже в добавлен.'},
+            return Response({'errors': 'Рецепт уже добавлен.'},
                             status=status.HTTP_400_BAD_REQUEST)
         model.objects.create(user=user, recipe=recipe)
         serializer = RecipeSerializer(recipe)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    def delete_from(self, user, recipe, model):
+    def delete_from(self, user, pk, model):
         """Удаление рецепта из коллекции."""
+        recipe = get_object_or_404(Recipe, pk=pk)
         collection = model.objects.filter(user=user, recipe=recipe)
         if not collection.exists():
-            return Response({'errors': 'Рецепт отсутствует'},
+            return Response({'errors': 'Рецепт отсутствует.'},
                             status=status.HTTP_400_BAD_REQUEST)
         collection.delete()
-        return Response({'status': 'Рецепт успешно удалён'},
+        return Response({'status': 'Рецепт успешно удалён.'},
                         status=status.HTTP_204_NO_CONTENT)
 
     @action(
