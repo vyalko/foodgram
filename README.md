@@ -70,6 +70,7 @@ sudo docker compose -f docker-compose.production.yml up -d
 1. Файл workflow уже готов и находится в .github/workflows/main.yml
 2. Заполните секреты в GitHub Actions.
 
+## Проект доступен по адресу: https://bestfoodgram.duckdns.org/
 
 Release
 0.0.1
