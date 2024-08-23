@@ -13,7 +13,8 @@ urlpatterns = [
     path('api/auth/', include('djoser.urls'), name='auth'),
     path('api/auth/', include('djoser.urls.authtoken'), name='auth-token'),
     path('api-token-auth/', views.obtain_auth_token, name='token-auth'),
-    path('<str:short_url>/', redirect_short_link, name='redirect_short_link'),
+    path('s/<str:short_url>/', redirect_short_link,
+         name='redirect_short_link'),
 ]
 
 if settings.DEBUG:
