@@ -216,4 +216,4 @@ class ShortLink(models.Model):
 
     @property
     def full_short_url(self):
-        return f"{settings.DOMAIN_NAME}/s/{self.short_url}"
+        return f"{settings.DOMAIN_NAME}s/{self.short_url}"
